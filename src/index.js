@@ -178,6 +178,28 @@ class Customer {
 
         return result;
     }
+
+    /**
+     * @method htmlStatement
+     * @return {string}
+     */
+     htmlStatement() {
+        let result = `<h1>Rental Record for <strong>${this.name}</strong></h1>\n`;
+
+        result += '<ul>';
+
+        for (let rental of this.rentals) {
+            //show figures for this rental
+            result += `<li>${rental.movie.title}: ${rental.getCharge()}</li>`;
+        }
+
+        result += '</ul>';
+
+        //add footer lines
+        result += `<p>Amount owed is <strong>${this.getTotalCharge()}</strong>.<br/>You earned ${this.getTotalFrequentRenterPoints()} frequent renter points</p>`;
+
+        return result;
+    }
 }
 
 function test() {
@@ -195,14 +217,11 @@ function test() {
     c.addRental(r2);
     c.addRental(r3);
 
-    const actualOutput = c.statement();
+    const actualOutput = c.htmlStatement();
 
     const expectedOutput =
-        `Rental Record for Alice\n` +
-            `\tInterstellar\t1.5\n` +
-            `\t2001\t2\n` +
-            `\tAd Astra\t30\n` +
-        `Amount owed is 33.5\nYou earned 4 frequent renter points`;
+    `<h1>Rental Record for <strong>Alice</strong></h1>
+<ul><li>Interstellar: 1.5</li><li>2001: 2</li><li>Ad Astra: 30</li></ul><p>Amount owed is <strong>33.5</strong>.<br/>You earned 4 frequent renter points</p>`;
 
     const testPassed = expectedOutput === actualOutput;
 
