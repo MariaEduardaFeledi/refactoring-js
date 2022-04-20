@@ -144,11 +144,38 @@ class Customer {
 
             //show figures for this rental
             result += `\t${rental.movie.title}\t${rental.getCharge()}\n`;
-            totalAmount += rental.getCharge();
         }
 
         //add footer lines
-        result += `Amount owed is ${totalAmount}\nYou earned ${frequentRenterPoints} frequent renter points`;
+        result += `Amount owed is ${this.getTotalCharge()}\nYou earned ${this.getTotalFrequentRenterPoints()} frequent renter points`;
+        return result;
+    }
+
+    /**
+     * @method getTotalCharge
+     * @return {number}
+     */
+     getTotalCharge() {
+        let result = 0;
+        
+        for (let rental of this.rentals) {
+            result += rental.getCharge();
+        }
+
+        return result;
+    }
+
+    /**
+     * @method getTotalFrequentRenterPoints
+     * @return {number}
+     */
+    getTotalFrequentRenterPoints() {
+        let result = 0;
+        
+        for (let rental of this.rentals) {
+            result += rental.getFrequentRenterPoints();
+        }
+
         return result;
     }
 }
