@@ -62,6 +62,33 @@ class Rental {
      * @type {number}
      */
     get daysRented() { return this._daysRented; }
+
+    /**
+     * @return {number}
+     */
+     getCharge() { 
+        let amount = 0;
+
+        switch (this.movie.priceCode) {
+            case Movie.REGULAR:
+                amount += 2;
+                if (this.daysRented > 2) {
+                    amount += (this.daysRented - 2) * 1.5;
+                }
+                break;
+            case Movie.NEW_RELEASE:
+                amount += this.daysRented * 3;
+                break;
+            case Movie.CHILDREN:
+                    amount += 1.5;
+                if (this.daysRented > 3) {
+                    amount += (this.daysRented - 3) * 1.5;
+                }
+                break;
+        }
+
+        return amount;
+    }
 }
 
 class Customer {
@@ -91,34 +118,6 @@ class Customer {
         this._rentals.push(rental);
     }
 
-      /**
-     * @param {Rental} rental
-     * @return {number}
-     */
-    amountFor(rental) {
-        let amount = 0;
-
-        switch (rental.movie.priceCode) {
-            case Movie.REGULAR:
-                amount += 2;
-                if (rental.daysRented > 2) {
-                    amount += (rental.daysRented() - 2) * 1.5;
-                }
-                break;
-            case Movie.NEW_RELEASE:
-                amount += rental.daysRented * 3;
-                break;
-            case Movie.CHILDREN:
-                    amount += 1.5;
-                if (rental.daysRented > 3) {
-                    amount += (rental.daysRented - 3) * 1.5;
-                }
-                break;
-        }
-
-        return amount;
-    }
-
     /**
      * @method statement
      * @return {string}
@@ -130,7 +129,7 @@ class Customer {
         let result = `Rental Record for ${this.name}\n`;
 
         for (let rental of this.rentals) {
-            let thisAmount = this.amountFor(rental);
+            let thisAmount = rental.getCharge();
 
             frequentRenterPoints++;
 
