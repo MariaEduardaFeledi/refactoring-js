@@ -41,6 +41,45 @@ class Movie {
     set priceCode(priceCode) {
         this._priceCode = priceCode;
     }
+
+    /**
+     * @param {number} daysRented
+     * @return {number}
+     */
+     getCharge(daysRented) {
+        let amount = 0;
+
+        switch (this.priceCode) {
+            case Movie.REGULAR:
+                amount += 2;
+                if (daysRented > 2) {
+                    amount += (daysRented - 2) * 1.5;
+                }
+                break;
+            case Movie.NEW_RELEASE:
+                amount += daysRented * 3;
+                break;
+            case Movie.CHILDREN:
+                    amount += 1.5;
+                if (daysRented > 3) {
+                    amount += (daysRented - 3) * 1.5;
+                }
+                break;
+        }
+
+        return amount;
+    }
+
+    /**
+     * @return {number}
+     */
+     getFrequentRenterPoints(daysRented) {
+        if (this.priceCode === Movie.NEW_RELEASE && daysRented > 1) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
 }
 
 class Rental {
@@ -66,39 +105,15 @@ class Rental {
     /**
      * @return {number}
      */
-     getCharge() { 
-        let amount = 0;
-
-        switch (this.movie.priceCode) {
-            case Movie.REGULAR:
-                amount += 2;
-                if (this.daysRented > 2) {
-                    amount += (this.daysRented - 2) * 1.5;
-                }
-                break;
-            case Movie.NEW_RELEASE:
-                amount += this.daysRented * 3;
-                break;
-            case Movie.CHILDREN:
-                    amount += 1.5;
-                if (this.daysRented > 3) {
-                    amount += (this.daysRented - 3) * 1.5;
-                }
-                break;
-        }
-
-        return amount;
+     getCharge() { // agora chama o novo método de Movie
+        return this.movie.getCharge(this.daysRented);
     }
 
     /**
      * @return {number}
      */
      getFrequentRenterPoints() {
-        if (this.movie.priceCode === Movie.NEW_RELEASE && this.daysRented > 1) {
-            return 2;
-        } else {
-            return 1;
-        }
+        return this.movie.getFrequentRenterPoints(this.daysRented);
     }
 }
 
